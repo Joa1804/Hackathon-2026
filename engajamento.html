@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cidadão Verde — COMDEMA Digital</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- CSS compartilhado -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Estilos da página -->
+  <style>
+    .page-wrap {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px;
+    }
+
+    .hero-eng {
+      background: linear-gradient(135deg,var(--forest),var(--forest-mid));
+      color: white;
+      border-radius: 18px;
+      padding: 56px;
+      margin-bottom: 40px;
+    }
+
+    .hero-eng h1 {
+      font-family: 'Sora', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero-eng em {
+      color: var(--mint);
+      font-style: normal;
+    }
+
+    .eng-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .eng-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    .rank {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .rank:last-child {
+      border-bottom: none;
+    }
+
+    .rank-num {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      color: var(--mint);
+      width: 24px;
+      text-align: center;
+    }
+
+    .rank-name {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .rank-pts {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      color: var(--forest);
+      font-size: 13px;
+    }
+
+    .cta-box {
+      background: var(--mint-pale);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 14px;
+      background: var(--mint);
+      color: var(--forest);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <strong>COMDEMA Digital</strong>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="licenciamento.html">Licenciamento</a>
+    <a href="mapas.html">Mapas</a>
+    <a href="engajamento.html" class="active">Engajamento</a>
+    <a href="coi.html">COI Ambiental</a>
+  </nav>
+</header>
+
+<main class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero-eng">
+    <h1>
+      Programa <em>Cidadão Verde</em>
+    </h1>
+    <p>
+      Engajando a população de Indaiatuba na proteção do meio ambiente
+      por meio de tecnologia, participação e reconhecimento.
+    </p>
+  </section>
+
+  <!-- GRID -->
+  <div class="eng-grid">
+
+    <!-- Ranking -->
+    <div class="eng-card">
+      <h3 class="section-title">🏆 Ranking — Maio</h3>
+
+      <div class="rank">
+        <div class="rank-num">👑</div>
+        <div class="rank-name">Ana Paula Santos</div>
+        <div class="rank-pts">842 pts</div>
+      </div>
+
+      <div class="rank">
+        <div class="rank-num">2</div>
+        <div class="rank-name">Carlos Ferreira</div>
+        <div class="rank-pts">655 pts</div>
+      </div>
+
+      <div class="rank">
+        <div class="rank-num">3</div>
+        <div class="rank-name">Maria Oliveira</div>
+        <div class="rank-pts">521 pts</div>
+      </div>
+
+      <div class="rank">
+        <div class="rank-num">4</div>
+        <div class="rank-name">João da Silva</div>
+        <div class="rank-pts">378 pts</div>
+      </div>
+    </div>
+
+    <!-- Como funciona -->
+    <div class="eng-card">
+      <h3 class="section-title">🌱 Como ganhar pontos</h3>
+      <ul style="font-size:14px;color:var(--text-muted);line-height:1.8;">
+        <li>📸 Denunciar descarte irregular (+50 pts)</li>
+        <li>🌳 Reportar poda ou dano ambiental (+40 pts)</li>
+        <li>✅ Denúncia resolvida (+20 pts)</li>
+        <li>🏅 Bônus mensal por participação ativa</li>
+      </ul>
+    </div>
+
+    <!-- CTA -->
+    <div class="eng-card">
+      <h3 class="section-title">📲 Participe agora</h3>
+      <div class="cta-box">
+        <p>
+          Ajude a cidade a cuidar do meio ambiente e
+          seja reconhecido por isso.
+        </p>
+        <a class="cta-btn" href="mapas.html">
+          Fazer uma denúncia →
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  COMDEMA Digital · Programa Cidadão Verde
+</footer>
+
+</body>
+</html>

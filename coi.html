@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COI Ambiental — COMDEMA Digital</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- CSS compartilhado -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Estilos específicos do COI -->
+  <style>
+    body {
+      background: #0A120A;
+      color: rgba(255,255,255,.88);
+    }
+
+    .page-wrap {
+      max-width: 1600px;
+      margin: auto;
+      padding: 32px;
+    }
+
+    header {
+      background: #0E1E12;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+
+    nav a {
+      color: rgba(255,255,255,.5);
+    }
+
+    nav a.active {
+      color: var(--mint-light);
+    }
+
+    .coi-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,.6);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--mint);
+      border-radius: 50%;
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: .4; }
+      100% { opacity: 1; }
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .kpi {
+      background: rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    }
+
+    .kpi-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--mint);
+    }
+
+    .cam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap: 12px;
+    }
+
+    .cam {
+      background: #0D1A0D;
+      border-radius: 10px;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cam-frame {
+      height: 160px;
+      border-radius: 8px;
+      background: linear-gradient(135deg,#1A3A1A,#0D2A0D);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      opacity: .3;
+    }
+
+    .cam-label {
+      font-size: 11px;
+      margin-top: 6px;
+      color: rgba(255,255,255,.5);
+    }
+
+    .detect {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(62,203,165,.9);
+      color: #0A2E1E;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 6px;
+    }
+
+    .alert {
+      background: rgba(233,91,91,.9);
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <strong>COMDEMA Digital · COI</strong>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="licenciamento.html">Licenciamento</a>
+    <a href="mapas.html">Mapas</a>
+    <a href="coi.html" class="active">COI Ambiental</a>
+  </nav>
+</header>
+
+<main class="page-wrap">
+
+  <div class="coi-top">
+    <h1 class="section-title" style="color:white;">Centro de Operações Ambientais</h1>
+    <div class="status">
+      <div class="status-dot"></div>
+      AO VIVO · 42 câmeras ativas
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Árvores catalogadas</div>
+      <div class="kpi-value">142</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Fauna detectada</div>
+      <div class="kpi-value">17</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Alertas ativos</div>
+      <div class="kpi-value" style="color:var(--red);">2</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Câmeras online</div>
+      <div class="kpi-value">42</div>
+    </div>
+  </div>
+
+  <!-- CAMERAS -->
+  <div class="cam-grid">
+
+    <div class="cam">
+      <div class="detect">🌳 Tipuana · 92%</div>
+      <div class="cam-frame">📷</div>
+      <div class="cam-label">CAM‑14 · Av. Brasil</div>
+    </div>
+
+    <div class="cam">
+      <div class="detect">🦡 Gambá · 87%</div>
+      <div class="cam-frame">📷</div>
+      <div class="cam-label">CAM‑07 · Parque Municipal</div>
+    </div>
+
+    <div class="cam">
+      <div class="detect">🌸 Floração · Outono</div>
+      <div class="cam-frame">📷</div>
+      <div class="cam-label">CAM‑22 · Praça Central</div>
+    </div>
+
+    <div class="cam">
+      <div class="detect alert">🚨 Poda irregular</div>
+      <div class="cam-frame">📷</div>
+      <div class="cam-label">CAM‑08 · Rua das Palmeiras</div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  COMDEMA Digital · COI Ambiental
+</footer>
+
+</body>
+</html>
+``

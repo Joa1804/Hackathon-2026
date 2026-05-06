@@ -1,0 +1,22 @@
+:root {
+  --forest:#0A2E1E;
+  --forest-mid:#123D28;
+  --forest-light:#1B5738;
+
+  --mint:#3ECBA5;
+  --mint-light:#7ADFC5;
+  --mint-pale:#D6F5ED;
+
+  --amber:#F5A623;
+  --red:#E95B5B;
+  --blue:#4A90D9;
+
+  --white:#FFFFFF;
+  --off-white:#F7F9F7;
+
+  --gray-100:#EEF1EE;
+  --gray-200:#DDE2DD;
+
+  --text:#1A2B1A;
+  --text-muted:#5A6B5A;
+}
