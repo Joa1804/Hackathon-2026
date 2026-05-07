@@ -8,109 +8,27 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
-  <!-- CSS compartilhado -->
-  
-<link rel="stylesheet" href="css/theme.css">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/components.css">
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
 
-  <!-- CSS específico do licenciamento -->
   <style>
-    .page-wrap {
-      max-width: 1400px;
-      margin: auto;
-      padding: 40px;
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    .kpi {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: 12px;
-      padding: 18px;
-    }
-
-    .kpi-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .kpi-value {
-      font-family: 'Sora', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--forest);
-    }
-
-    /* Kanban (se não estiver no components.css) */
-    .kanban {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-    }
-
-    .kanban-col {
-      background: var(--gray-100);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .kanban-col h4 {
-      font-family: 'Sora', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      margin-bottom: 14px;
-      color: var(--forest);
-    }
-
-    .kanban-card {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .kanban-card strong {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .kanban-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .page-wrap { max-width: 1400px; margin: auto; padding: 40px; }
   </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
   <strong>COMDEMA Digital</strong>
-<nav>
-  <a href="index.html">Início</a>
-  <a href="licenciamento.html" class="active">Licenciamento</a>
-  <a href="mapas.html">Mapas</a>
-  <a href="engajamento.html">Engajamento</a>
-  <a href="coi.html">COI Ambiental</a>
-</nav>
-
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="licenciamento.html" class="active">Licenciamento</a>
+    <a href="mapas.html">Mapas</a>
+    <a href="engajamento.html">Engajamento</a>
+    <a href="coi.html">COI Ambiental</a>
+  </nav>
 </header>
 
 <main class="page-wrap">
@@ -120,23 +38,28 @@
     Gestão digital de licenças, ofícios e processos administrativos do COMDEMA.
   </p>
 
+  <!-- BOTÃO -->
+  <button id="btn-new" class="btn-sm" style="margin-bottom:20px;">
+    + Novo Processo
+  </button>
+
   <!-- KPIs -->
   <div class="kpi-grid">
     <div class="kpi">
       <div class="kpi-label">Processos ativos</div>
-      <div class="kpi-value">18</div>
+      <div class="kpi-value" id="kpi-ativos">0</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Prazo crítico</div>
-      <div class="kpi-value" style="color:var(--red);">4</div>
+      <div class="kpi-value" id="kpi-criticos" style="color:var(--red);">0</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Tempo médio</div>
-      <div class="kpi-value">6,4<span style="font-size:14px;color:var(--text-muted);"> dias</span></div>
+      <div class="kpi-value" id="kpi-tempo">–</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Finalizados / mês</div>
-      <div class="kpi-value" style="color:var(--mint);">41</div>
+      <div class="kpi-value" id="kpi-finalizados" style="color:var(--mint);">0</div>
     </div>
   </div>
 
@@ -144,14 +67,17 @@
   <div class="kanban">
 
     <div class="kanban-col" data-status="recebido">
-      <h4>Recebido</h4>
+      <h4>Recebido <span class="col-count" id="count-recebido">0</span></h4>
 
-      <div class="kanban-card" draggable="true" data-id="proc-001">
+      <div class="kanban-card" draggable="true" data-id="proc-001" data-prazo="20/05/2026" data-responsavel="Eng. João">
         <strong>Licença — Comércio Lago Verde</strong>
-        <div class="kanban-meta">Hoje · 📄 Licença</div>
+        <div class="kanban-meta">
+          <span>Hoje</span>
+          <span>📄 Licença</span>
+        </div>
       </div>
 
-      <div class="kanban-card" draggable="true" data-id="proc-002">
+      <div class="kanban-card" draggable="true" data-id="proc-002" data-prazo="15/05/2026" data-responsavel="Maria">
         <strong>Ofício 047 — Secretaria de Obras</strong>
         <div class="kanban-meta">
           <span>Ontem</span>
@@ -161,9 +87,9 @@
     </div>
 
     <div class="kanban-col" data-status="analise">
-      <h4>Em análise</h4>
+      <h4>Em análise <span class="col-count" id="count-analise">0</span></h4>
 
-      <div class="kanban-card">
+      <div class="kanban-card" draggable="true" data-id="proc-003" data-prazo="20/05/2026" data-responsavel="Carlos">
         <strong>Renovação — Tratamento de Resíduos</strong>
         <div class="kanban-meta">
           <span>Prazo 20/05</span>
@@ -173,71 +99,37 @@
     </div>
 
     <div class="kanban-col" data-status="andamento">
-      <h4>Em andamento</h4>
+      <h4>Em andamento <span class="col-count" id="count-andamento">0</span></h4>
 
-      <div class="kanban-card">
-        <strong>Vistoria — Bairro Vila Nova</strong>
-        <div class="kanban-meta">
-          <span>Vistoria 16/05</span>
-          <span style="color:var(--mint);">✅ No prazo</span>
-        </div>
-      </div>
-
-      <div class="kanban-card" draggable="true" data-id="proc-010">
+      <div class="kanban-card" draggable="true" data-id="proc-010" data-prazo="22/05/2026" data-responsavel="Marcos">
         <strong>Parecer técnico — Lic. 2024-118</strong>
         <div class="kanban-meta">
-          <span>Resp. Eng. Marcos</span>
+          <span class="sensitive">Resp. Eng. Marcos</span>
           <span>⏳</span>
         </div>
       </div>
     </div>
 
     <div class="kanban-col" data-status="finalizado">
-      <h4>Finalizado</h4>
+      <h4>Finalizado <span class="col-count" id="count-finalizado">0</span></h4>
 
-      <div class="kanban-card">
+      <div class="kanban-card" draggable="true" data-id="proc-020">
         <strong>Licença — Posto Av. Brasil</strong>
         <div class="kanban-meta">
           <span>Concluído</span>
           <span style="color:var(--mint);">✅ Aprovado</span>
         </div>
       </div>
-
-      <div class="kanban-card">
-        <strong>Ofício — SAAE Indaiatuba</strong>
-        <div class="kanban-meta">
-          <span>09/05</span>
-          <span>📤 Enviado</span>
-        </div>
-      </div>
     </div>
 
   </div>
-
 </main>
-
 
 <footer>
   COMDEMA Digital · Módulo Licenciamento
 </footer>
 
 <script src="js/app.js"></script>
-<!-- MODAL -->
-<div id="modal" class="modal hidden">
-  <div class="modal-overlay"></div>
 
-  <div class="modal-content">
-    <h3 id="modal-title">Detalhes do processo</h3>
-
-    <div id="modal-body">
-      <!-- conteúdo dinâmico -->
-    </div>
-
-    <button id="modal-close" class="modal-close">
-      Fechar
-    </button>
-  </div>
-</div>
 </body>
-</html>>
-``
+</html>
