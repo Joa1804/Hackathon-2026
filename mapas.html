@@ -17,7 +17,6 @@
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-o9N1j7kP2Jb0zU8R6k9nH0zYjH6Pj0zYdE+4o0p0nHU="
     crossorigin=""
   />
 
@@ -62,7 +61,6 @@
 
 <body>
 
-<!-- HEADER -->
 <header>
   <strong>COMDEMA Digital</strong>
   <nav>
@@ -78,7 +76,7 @@
 
   <h1 class="section-title">Mapas Ambientais</h1>
   <p class="section-sub">
-    Visualização geográfica de denúncias ambientais, resíduos, poda e pontos críticos.
+    Clique no mapa para registrar uma denúncia ambiental.
   </p>
 
   <!-- Toolbar -->
@@ -100,30 +98,17 @@
 </footer>
 
 <!-- Leaflet JS -->
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-o8E7g6FQwJ0p7p5rbeZzF4pX7GkJv1nU8z5P5p0w0XU="
-  crossorigin="">
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
 <script>
   // Inicializa o mapa (Indaiatuba)
   const map = L.map('map').setView([-23.0906, -47.2183], 13);
 
-  // Camada base
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
   }).addTo(map);
 
-  // Ícones simples
-  const redIcon = new L.Icon({
-    iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34]
-  });
-
-  // Denúncias mockadas
+  // Marcadores mockados (visual)
   const reports = [
     { lat: -23.088, lng: -47.222, text: '🗑️ Entulho irregular — Rua das Flores' },
     { lat: -23.095, lng: -47.210, text: '🌿 Poda irregular — Av. Brasil' },
@@ -132,9 +117,41 @@
   ];
 
   reports.forEach(r => {
-    L.marker([r.lat, r.lng], { icon: redIcon })
+    L.marker([r.lat, r.lng])
       .addTo(map)
       .bindPopup(r.text);
+  });
+
+  // ===== CRIAR DENÚNCIA NO CLIQUE =====
+  map.on('click', e => {
+    const { lat, lng } = e.latlng;
+
+    if (!confirm('Deseja registrar uma denúncia neste local?')) return;
+
+    const denuncia = {
+      id: `den-${Date.now()}`,
+      title: 'Denúncia ambiental',
+      tipo: 'Denúncia via mapa',
+      status: 'recebido',
+      prazo: '',
+      responsavel: '',
+      prioridade: 'Normal',
+      localizacao: `${lat.toFixed(5)}, ${lng.toFixed(5)}`,
+      data: new Date().toLocaleDateString('pt-BR')
+    };
+
+    const pendentes =
+      JSON.parse(localStorage.getItem('denunciasPendentes')) || [];
+
+    pendentes.push(denuncia);
+    localStorage.setItem('denunciasPendentes', JSON.stringify(pendentes));
+
+    L.marker([lat, lng])
+      .addTo(map)
+      .bindPopup('📍 Denúncia registrada')
+      .openPopup();
+
+    alert('✅ Denúncia registrada! Ela aparecerá no Licenciamento.');
   });
 </script>
 

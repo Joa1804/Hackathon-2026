@@ -171,3 +171,118 @@ bindCardClicks();
 checkDeadlines();
 updateKPIs();
 updateColumnCounts();
+
+function importarDenuncias() {
+  const pendentes =
+    JSON.parse(localStorage.getItem('denunciasPendentes')) || [];
+
+  if (!pendentes.length) return;
+
+  const colunaRecebido =
+    document.querySelector('.kanban-col[data-status="recebido"]');
+
+  pendentes.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'kanban-card';
+    card.draggable = true;
+
+    card.dataset.id = d.id;
+    card.dataset.title = d.title;
+    card.dataset.tipo = d.tipo;
+    card.dataset.prazo = d.prazo;
+    card.dataset.responsavel = d.responsavel;
+    card.dataset.prioridade = d.prioridade;
+
+    card.innerHTML = `
+      <strong>${d.title}</strong>
+      <div class="kanban-meta">
+        <span>📍 ${d.localizacao}</span>
+        <span>🆕</span>
+      </div>
+    `;
+
+    enableDrag(card);
+    card.addEventListener('click', () => openModal(card));
+
+    colunaRecebido.appendChild(card);
+  });
+
+  localStorage.removeItem('denunciasPendentes');
+
+  saveKanbanState();
+  checkDeadlines();
+  updateKPIs();
+  updateColumnCounts();
+}
+
+let chartStatus = null;
+let chartPrazo = null;
+
+function updateCharts() {
+  // ===== CONTAGEM POR STATUS =====
+  const statusCounts = {
+    recebido: 0,
+    analise: 0,
+    andamento: 0,
+    finalizado: 0
+  };
+
+  document.querySelectorAll('.kanban-col').forEach(col => {
+    const status = col.dataset.status;
+    statusCounts[status] =
+      col.querySelectorAll('.kanban-card').length;
+  });
+
+  // ===== PRAZOS =====
+  const criticos = document.querySelectorAll('.kanban-card.critical').length;
+  const total = document.querySelectorAll('.kanban-card').length;
+  const ok = total - criticos;
+
+  // ===== STATUS CHART =====
+  const ctxStatus = document.getElementById('chart-status');
+  if (chartStatus) chartStatus.destroy();
+
+  chartStatus = new Chart(ctxStatus, {
+    type: 'bar',
+    data: {
+      labels: ['Recebido', 'Em análise', 'Em andamento', 'Finalizado'],
+      datasets: [{
+        data: [
+          statusCounts.recebido,
+          statusCounts.analise,
+          statusCounts.andamento,
+          statusCounts.finalizado
+        ],
+        backgroundColor: [
+          '#9BAA9B',
+          '#F5A623',
+          '#4A90D9',
+          '#3ECBA5'
+        ]
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      responsive: true
+    }
+  });
+
+  // ===== PRAZO CHART =====
+  const ctxPrazo = document.getElementById('chart-prazo');
+  if (chartPrazo) chartPrazo.destroy();
+
+  chartPrazo = new Chart(ctxPrazo, {
+    type: 'doughnut',
+    data: {
+      labels: ['Crítico', 'No prazo'],
+      datasets: [{
+        data: [criticos, ok],
+        backgroundColor: ['#E95B5B', '#3ECBA5']
+      }]
+    },
+    options: {
+      responsive: true
+    }
+  });
+}
+
