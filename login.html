@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — COMDEMA Digital</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    .login-box {
+      max-width: 360px;
+      margin: 120px auto;
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      border: 1px solid var(--gray-200);
+      text-align: center;
+    }
+
+    .login-box button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-cidadao {
+      background: var(--mint);
+      color: var(--forest);
+    }
+
+    .btn-tecnico {
+      background: var(--forest);
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h2>COMDEMA Digital</h2>
+  <p>Escolha seu perfil</p>
+
+  <button class="btn-cidadao" onclick="login('cidadao')">
+    👤 Sou Cidadão
+  </button>
+
+  <button class="btn-tecnico" onclick="login('tecnico')">
+    🛠️ Sou Técnico
+  </button>
+</div>
+
+<script>
+  function login(role) {
+    localStorage.setItem('userRole', role);
+    window.location.href =
+      role === 'tecnico'
+        ? 'licenciamento.html'
+        : 'mapas.html';
+  }
+</script>
+
+</body>
+</html>

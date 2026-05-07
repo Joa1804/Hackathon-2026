@@ -18,6 +18,16 @@
 
 <!-- HEADER -->
 <header>
+  <button  class="btn-logout" onclick="logout()" style="margin-left:16px;" class="btn-sm">
+  🚪 Sair
+</button>
+
+<script>
+  function logout() {
+    localStorage.removeItem('userRole');
+    window.location.href = 'login.html';
+  }
+</script>
   <strong>COMDEMA Digital</strong>
 <nav>
   <a href="index.html">Início</a>

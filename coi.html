@@ -8,7 +8,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
-  <!-- CSS compartilhado -->
+  <!-- CSS base do projeto -->
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
@@ -16,108 +16,95 @@
   <!-- Estilos específicos do COI -->
   <style>
     body {
-      background: #0A120A;
-      color: rgba(255,255,255,.88);
+      background: #0B140F;
+      color: rgba(255,255,255,.85);
+    }
+
+    header {
+      background: #0E1E15;
+      border-bottom: 1px solid rgba(255,255,255,.05);
     }
 
     .page-wrap {
-      max-width: 1600px;
+      max-width: 1500px;
       margin: auto;
       padding: 32px;
     }
 
-    header {
-      background: #0E1E12;
-      border-bottom: 1px solid rgba(255,255,255,.05);
-    }
-
-    nav a {
-      color: rgba(255,255,255,.5);
-    }
-
-    nav a.active {
-      color: var(--mint-light);
-    }
-
-    .coi-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* KPIs */
+    .coi-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 16px;
       margin-bottom: 24px;
     }
 
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: rgba(255,255,255,.6);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--mint);
-      border-radius: 50%;
-      animation: pulse 1.6s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: .4; }
-      100% { opacity: 1; }
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .kpi {
+    .coi-kpi {
       background: rgba(255,255,255,.04);
       border-radius: 12px;
-      padding: 16px;
+      padding: 18px;
     }
 
-    .kpi-label {
+    .coi-kpi span {
       font-size: 11px;
       letter-spacing: .08em;
       text-transform: uppercase;
       color: rgba(255,255,255,.4);
     }
 
-    .kpi-value {
-      font-family: 'Sora', sans-serif;
+    .coi-kpi strong {
+      display: block;
       font-size: 26px;
-      font-weight: 800;
+      font-family: 'Sora', sans-serif;
       color: var(--mint);
+      margin-top: 4px;
     }
 
+    /* Toolbar */
+    .coi-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .coi-btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .coi-btn.active {
+      background: var(--mint);
+      color: var(--forest);
+    }
+
+    /* Câmeras */
     .cam-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-      gap: 12px;
+      gap: 14px;
     }
 
     .cam {
-      background: #0D1A0D;
-      border-radius: 10px;
+      background: #0E1E15;
+      border-radius: 12px;
       padding: 10px;
       position: relative;
-      overflow: hidden;
     }
 
     .cam-frame {
-      height: 160px;
+      height: 150px;
+      background: linear-gradient(135deg,#1E3F2E,#0B2A1B);
       border-radius: 8px;
-      background: linear-gradient(135deg,#1A3A1A,#0D2A0D);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
-      opacity: .3;
+      font-size: 28px;
+      opacity: .35;
     }
 
     .cam-label {
@@ -126,20 +113,23 @@
       color: rgba(255,255,255,.5);
     }
 
-    .detect {
+    .tag {
       position: absolute;
       top: 10px;
       left: 10px;
-      background: rgba(62,203,165,.9);
-      color: #0A2E1E;
       font-size: 10px;
-      font-weight: 700;
       padding: 3px 6px;
       border-radius: 6px;
+      font-weight: 700;
     }
 
-    .alert {
-      background: rgba(233,91,91,.9);
+    .tag-ok {
+      background: rgba(62,203,165,.9);
+      color: #0A2E1E;
+    }
+
+    .tag-alert {
+      background: rgba(233,91,91,.95);
       color: white;
     }
   </style>
@@ -149,70 +139,68 @@
 
 <!-- HEADER -->
 <header>
+  <button  class="btn-logout" onclick="logout()" style="margin-left:16px;" class="btn-sm">
+  🚪 Sair
+</button>
   <strong>COMDEMA Digital · COI</strong>
   <nav>
     <a href="index.html">Início</a>
     <a href="licenciamento.html">Licenciamento</a>
     <a href="mapas.html">Mapas</a>
-    <a href="coi.html" class="active">COI Ambiental</a>
+    <a href="coi.html" class="active">COI</a>
   </nav>
 </header>
 
 <main class="page-wrap">
 
-  <div class="coi-top">
-    <h1 class="section-title" style="color:white;">Centro de Operações Ambientais</h1>
-    <div class="status">
-      <div class="status-dot"></div>
-      AO VIVO · 42 câmeras ativas
-    </div>
-  </div>
-
   <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="kpi">
-      <div class="kpi-label">Árvores catalogadas</div>
-      <div class="kpi-value">142</div>
+  <div class="coi-kpis">
+    <div class="coi-kpi">
+      <span>Câmeras ativas</span>
+      <strong>42</strong>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Fauna detectada</div>
-      <div class="kpi-value">17</div>
+    <div class="coi-kpi">
+      <span>Alertas ativos</span>
+      <strong style="color:var(--red);">2</strong>
     </div>
-    <div class="kpi">
-      <div class="kpi-label">Alertas ativos</div>
-      <div class="kpi-value" style="color:var(--red);">2</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Câmeras online</div>
-      <div class="kpi-value">42</div>
+    <div class="coi-kpi">
+      <span>Detecções ambientais</span>
+      <strong>17</strong>
     </div>
   </div>
 
-  <!-- CAMERAS -->
-  <div class="cam-grid">
+  <!-- Toolbar -->
+  <div class="coi-toolbar">
+    <button class="coi-btn active" data-filter="all">Todas</button>
+    <button class="coi-btn" data-filter="alert">Alertas</button>
+    <button class="coi-btn" data-filter="ok">Normal</button>
+  </div>
 
-    <div class="cam">
-      <div class="detect">🌳 Tipuana · 92%</div>
+  <!-- CÂMERAS -->
+  <div class="cam-grid" id="camGrid">
+
+    <div class="cam" data-status="ok">
+      <div class="tag tag-ok">🌳 Árvore catalogada</div>
       <div class="cam-frame">📷</div>
       <div class="cam-label">CAM‑14 · Av. Brasil</div>
     </div>
 
-    <div class="cam">
-      <div class="detect">🦡 Gambá · 87%</div>
+    <div class="cam" data-status="alert">
+      <div class="tag tag-alert">🚨 Poda irregular</div>
+      <div class="cam-frame">📷</div>
+      <div class="cam-label">CAM‑08 · Rua das Palmeiras</div>
+    </div>
+
+    <div class="cam" data-status="ok">
+      <div class="tag tag-ok">🦡 Fauna detectada</div>
       <div class="cam-frame">📷</div>
       <div class="cam-label">CAM‑07 · Parque Municipal</div>
     </div>
 
-    <div class="cam">
-      <div class="detect">🌸 Floração · Outono</div>
+    <div class="cam" data-status="alert">
+      <div class="tag tag-alert">🚨 Descarte irregular</div>
       <div class="cam-frame">📷</div>
-      <div class="cam-label">CAM‑22 · Praça Central</div>
-    </div>
-
-    <div class="cam">
-      <div class="detect alert">🚨 Poda irregular</div>
-      <div class="cam-frame">📷</div>
-      <div class="cam-label">CAM‑08 · Rua das Palmeiras</div>
+      <div class="cam-label">CAM‑22 · Área Industrial</div>
     </div>
 
   </div>
@@ -220,9 +208,30 @@
 </main>
 
 <footer>
-  COMDEMA Digital · COI Ambiental
+  COI Ambiental · Monitoramento em tempo real (simulado)
 </footer>
+
+<script>
+  // Filtro de câmeras
+  const buttons = document.querySelectorAll('.coi-btn');
+  const cams = document.querySelectorAll('.cam');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+
+      cams.forEach(cam => {
+        cam.style.display =
+          filter === 'all' || cam.dataset.status === filter
+            ? 'block'
+            : 'none';
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
-``

@@ -110,8 +110,17 @@
 
 <body>
 
-<!-- HEADER -->
 <header>
+  <button onclick="logout()" style="margin-left:16px;" class="btn-sm">
+  Sair
+</button>
+
+<script>
+  function logout() {
+    localStorage.removeItem('userRole');
+    window.location.href = 'login.html';
+  }
+</script>
   <strong>COMDEMA Digital</strong>
   <nav>
     <a href="index.html">Início</a>
@@ -135,36 +144,31 @@
     </p>
   </section>
 
-  <!-- GRID -->
+  <!-- KPIs -->
+  <div class="eng-grid">
+    <div class="eng-card">
+      <h3>👥 Cidadãos ativos</h3>
+      <strong id="kpi-users">0</strong>
+    </div>
+
+    <div class="eng-card">
+      <h3>📍 Denúncias registradas</h3>
+      <strong id="kpi-denuncias">0</strong>
+    </div>
+
+    <div class="eng-card">
+      <h3>🏆 Pontuação máxima</h3>
+      <strong id="kpi-max">0</strong>
+    </div>
+  </div>
+
+  <!-- GRID PRINCIPAL -->
   <div class="eng-grid">
 
     <!-- Ranking -->
     <div class="eng-card">
-      <h3 class="section-title">🏆 Ranking — Maio</h3>
-
-      <div class="rank">
-        <div class="rank-num">👑</div>
-        <div class="rank-name">Ana Paula Santos</div>
-        <div class="rank-pts">842 pts</div>
-      </div>
-
-      <div class="rank">
-        <div class="rank-num">2</div>
-        <div class="rank-name">Carlos Ferreira</div>
-        <div class="rank-pts">655 pts</div>
-      </div>
-
-      <div class="rank">
-        <div class="rank-num">3</div>
-        <div class="rank-name">Maria Oliveira</div>
-        <div class="rank-pts">521 pts</div>
-      </div>
-
-      <div class="rank">
-        <div class="rank-num">4</div>
-        <div class="rank-name">João da Silva</div>
-        <div class="rank-pts">378 pts</div>
-      </div>
+      <h3 class="section-title">🏆 Ranking — Cidadão Verde</h3>
+      <div id="ranking-list"></div>
     </div>
 
     <!-- Como funciona -->
@@ -199,6 +203,58 @@
 <footer>
   COMDEMA Digital · Programa Cidadão Verde
 </footer>
+
+<script>
+  const role = localStorage.getItem('userRole');
+  if (!role) window.location.href = 'login.html';
+</script>
+
+<script>
+  /*
+    Cada denúncia criada no mapa gera +50 pontos.
+    Usamos localStorage para demo.
+  */
+  function loadEngajamento() {
+    const denuncias =
+      JSON.parse(localStorage.getItem('denunciasPendentes')) || [];
+
+    const usuarios = {};
+
+    denuncias.forEach((d, i) => {
+      const user = `Cidadão ${i % 4 + 1}`;
+      usuarios[user] = (usuarios[user] || 0) + 50;
+    });
+
+    document.getElementById('kpi-users').innerText =
+      Object.keys(usuarios).length;
+
+    document.getElementById('kpi-denuncias').innerText =
+      denuncias.length;
+
+    document.getElementById('kpi-max').innerText =
+      Math.max(0, ...Object.values(usuarios));
+
+    const rankingList = document.getElementById('ranking-list');
+    rankingList.innerHTML = '';
+
+    Object.entries(usuarios)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([name, points], index) => {
+        const div = document.createElement('div');
+        div.className = 'rank';
+        div.innerHTML = `
+          <div class="rank-num">
+            ${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index + 1}
+          </div>
+          <div class="rank-name">${name}</div>
+          <div class="rank-pts">${points} pts</div>
+        `;
+        rankingList.appendChild(div);
+      });
+  }
+
+  loadEngajamento();
+</script>
 
 </body>
 </html>

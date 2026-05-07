@@ -62,6 +62,16 @@
 <body>
 
 <header>
+   <button  class="btn-logout" onclick="logout()" style="margin-left:16px;" class="btn-sm">
+  🚪 Sair
+</button>
+
+<script>
+  function logout() {
+    localStorage.removeItem('userRole');
+    window.location.href = 'login.html';
+  }
+</script>
   <strong>COMDEMA Digital</strong>
   <nav>
     <a href="index.html">Início</a>
@@ -96,6 +106,13 @@
 <footer>
   COMDEMA Digital · Módulo de Mapas Ambientais
 </footer>
+
+<script>
+  if (localStorage.getItem('userRole') !== 'cidadao') {
+    alert('Área exclusiva para cidadãos.');
+    window.location.href = 'login.html';
+  }
+</script>
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>

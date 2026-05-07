@@ -21,6 +21,16 @@
 <body>
 
 <header>
+  <button onclick="logout()" style="margin-left:16px;" class="btn-sm">
+  Sair
+</button>
+
+<script>
+  function logout() {
+    localStorage.removeItem('userRole');
+    window.location.href = 'login.html';
+  }
+</script>
   <strong>COMDEMA Digital</strong>
   <nav>
     <a href="index.html">Início</a>
@@ -142,6 +152,13 @@
 <footer>
   COMDEMA Digital · Módulo Licenciamento
 </footer>
+
+<script>
+  if (localStorage.getItem('userRole') !== 'tecnico') {
+    alert('Acesso restrito a técnicos.');
+    window.location.href = 'login.html';
+  }
+</script>
 
 <script src="js/app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

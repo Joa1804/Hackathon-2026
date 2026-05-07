@@ -1,15 +1,15 @@
-// =====================
-// ELEMENTOS BASE
-// =====================
+/* ==================================================
+   CONFIGURAÇÃO BASE
+================================================== */
 const cardsSelector = '.kanban-card';
 const columnSelector = '.kanban-col';
 
 let draggedCard = null;
 let currentCard = null;
 
-// =====================
-// DRAG & DROP
-// =====================
+/* ==================================================
+   DRAG & DROP
+================================================== */
 function enableDrag(card) {
   card.addEventListener('dragstart', () => {
     draggedCard = card;
@@ -22,31 +22,34 @@ function enableDrag(card) {
   });
 }
 
-document.querySelectorAll(columnSelector).forEach(col => {
-  col.addEventListener('dragover', e => {
-    e.preventDefault();
-    col.classList.add('drag-over');
-  });
+function initDragAndDrop() {
+  document.querySelectorAll(columnSelector).forEach(col => {
+    col.addEventListener('dragover', e => {
+      e.preventDefault();
+      col.classList.add('drag-over');
+    });
 
-  col.addEventListener('dragleave', () => {
-    col.classList.remove('drag-over');
-  });
+    col.addEventListener('dragleave', () => {
+      col.classList.remove('drag-over');
+    });
 
-  col.addEventListener('drop', () => {
-    col.classList.remove('drag-over');
-    if (draggedCard) {
+    col.addEventListener('drop', () => {
+      col.classList.remove('drag-over');
+      if (!draggedCard) return;
+
       col.appendChild(draggedCard);
       saveKanbanState();
       checkDeadlines();
       updateKPIs();
       updateColumnCounts();
-    }
+      updateCharts();
+    });
   });
-});
+}
 
-// =====================
-// LOCAL STORAGE
-// =====================
+/* ==================================================
+   LOCAL STORAGE — KANBAN
+================================================== */
 function saveKanbanState() {
   const state = {};
   document.querySelectorAll(columnSelector).forEach(col => {
@@ -60,18 +63,18 @@ function saveKanbanState() {
 
 function loadKanbanState() {
   const state = JSON.parse(localStorage.getItem('kanbanState')) || {};
-  Object.keys(state).forEach(id => {
+  Object.entries(state).forEach(([id, status]) => {
     const card = document.querySelector(`[data-id="${id}"]`);
     const col = document.querySelector(
-      `.kanban-col[data-status="${state[id]}"]`
+      `.kanban-col[data-status="${status}"]`
     );
     if (card && col) col.appendChild(card);
   });
 }
 
-// =====================
-// MODAL
-// =====================
+/* ==================================================
+   MODAL
+================================================== */
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modal-title');
 const modalBody = document.getElementById('modal-body');
@@ -106,12 +109,12 @@ modalCancel?.addEventListener('click', closeModal);
 modal.querySelector('.modal-overlay')
   ?.addEventListener('click', closeModal);
 
-// =====================
-// CLICK NOS CARDS
-// =====================
-function bindCardClicks() {
+/* ==================================================
+   CLICK NOS CARDS
+================================================== */
+function bindCardEvents() {
   document.querySelectorAll(cardsSelector).forEach(card => {
-    card.addEventListener('click', e => {
+    card.addEventListener('click', () => {
       if (card.classList.contains('dragging')) return;
       openModal(card);
     });
@@ -119,26 +122,27 @@ function bindCardClicks() {
   });
 }
 
-// =====================
-// PRAZO CRÍTICO
-// =====================
+/* ==================================================
+   PRAZO CRÍTICO
+================================================== */
 function checkDeadlines() {
   const today = new Date();
+
   document.querySelectorAll(cardsSelector).forEach(card => {
     const prazo = card.dataset.prazo;
     if (!prazo) return;
 
-    const [d,m,y] = prazo.split('/');
-    const date = new Date(y, m-1, d);
-    const diff = (date - today) / 86400000;
+    const [d, m, y] = prazo.split('/');
+    const date = new Date(y, m - 1, d);
+    const diffDays = (date - today) / 86400000;
 
-    card.classList.toggle('critical', diff <= 3);
+    card.classList.toggle('critical', diffDays <= 3);
   });
 }
 
-// =====================
-// KPIs
-// =====================
+/* ==================================================
+   KPIs
+================================================== */
 function updateKPIs() {
   document.getElementById('kpi-ativos').innerText =
     document.querySelectorAll(cardsSelector).length;
@@ -155,23 +159,17 @@ function updateKPIs() {
 function updateColumnCounts() {
   ['recebido','analise','andamento','finalizado'].forEach(status => {
     const el = document.getElementById(`count-${status}`);
-    if (el) {
-      el.innerText = document.querySelectorAll(
-        `.kanban-col[data-status="${status}"] .kanban-card`
-      ).length;
-    }
+    if (!el) return;
+
+    el.innerText = document.querySelectorAll(
+      `.kanban-col[data-status="${status}"] .kanban-card`
+    ).length;
   });
 }
 
-// =====================
-// INIT
-// =====================
-loadKanbanState();
-bindCardClicks();
-checkDeadlines();
-updateKPIs();
-updateColumnCounts();
-
+/* ==================================================
+   IMPORTAR DENÚNCIAS DO MAPA
+================================================== */
 function importarDenuncias() {
   const pendentes =
     JSON.parse(localStorage.getItem('denunciasPendentes')) || [];
@@ -213,13 +211,18 @@ function importarDenuncias() {
   checkDeadlines();
   updateKPIs();
   updateColumnCounts();
+  updateCharts();
 }
 
+/* ==================================================
+   GRÁFICOS (Chart.js)
+================================================== */
 let chartStatus = null;
 let chartPrazo = null;
 
 function updateCharts() {
-  // ===== CONTAGEM POR STATUS =====
+  if (typeof Chart === 'undefined') return;
+
   const statusCounts = {
     recebido: 0,
     analise: 0,
@@ -227,62 +230,57 @@ function updateCharts() {
     finalizado: 0
   };
 
-  document.querySelectorAll('.kanban-col').forEach(col => {
-    const status = col.dataset.status;
-    statusCounts[status] =
-      col.querySelectorAll('.kanban-card').length;
+  document.querySelectorAll(columnSelector).forEach(col => {
+    statusCounts[col.dataset.status] =
+      col.querySelectorAll(cardsSelector).length;
   });
 
-  // ===== PRAZOS =====
-  const criticos = document.querySelectorAll('.kanban-card.critical').length;
-  const total = document.querySelectorAll('.kanban-card').length;
-  const ok = total - criticos;
+  const criticos =
+    document.querySelectorAll(`${cardsSelector}.critical`).length;
+  const total =
+    document.querySelectorAll(cardsSelector).length;
 
-  // ===== STATUS CHART =====
   const ctxStatus = document.getElementById('chart-status');
-  if (chartStatus) chartStatus.destroy();
+  if (ctxStatus) {
+    chartStatus?.destroy();
+    chartStatus = new Chart(ctxStatus, {
+      type: 'bar',
+      data: {
+        labels: ['Recebido','Em análise','Em andamento','Finalizado'],
+        datasets: [{
+          data: Object.values(statusCounts),
+          backgroundColor: ['#9BAA9B','#F5A623','#4A90D9','#3ECBA5']
+        }]
+      },
+      options: { plugins:{legend:{display:false}}, responsive:true }
+    });
+  }
 
-  chartStatus = new Chart(ctxStatus, {
-    type: 'bar',
-    data: {
-      labels: ['Recebido', 'Em análise', 'Em andamento', 'Finalizado'],
-      datasets: [{
-        data: [
-          statusCounts.recebido,
-          statusCounts.analise,
-          statusCounts.andamento,
-          statusCounts.finalizado
-        ],
-        backgroundColor: [
-          '#9BAA9B',
-          '#F5A623',
-          '#4A90D9',
-          '#3ECBA5'
-        ]
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      responsive: true
-    }
-  });
-
-  // ===== PRAZO CHART =====
   const ctxPrazo = document.getElementById('chart-prazo');
-  if (chartPrazo) chartPrazo.destroy();
-
-  chartPrazo = new Chart(ctxPrazo, {
-    type: 'doughnut',
-    data: {
-      labels: ['Crítico', 'No prazo'],
-      datasets: [{
-        data: [criticos, ok],
-        backgroundColor: ['#E95B5B', '#3ECBA5']
-      }]
-    },
-    options: {
-      responsive: true
-    }
-  });
+  if (ctxPrazo) {
+    chartPrazo?.destroy();
+    chartPrazo = new Chart(ctxPrazo, {
+      type: 'doughnut',
+      data: {
+        labels: ['Crítico','No prazo'],
+        datasets: [{
+          data: [criticos, total - criticos],
+          backgroundColor: ['#E95B5B','#3ECBA5']
+        }]
+      },
+      options: { responsive:true }
+    });
+  }
 }
 
+/* ==================================================
+   INIT
+================================================== */
+loadKanbanState();
+bindCardEvents();
+initDragAndDrop();
+importarDenuncias();
+checkDeadlines();
+updateKPIs();
+updateColumnCounts();
+updateCharts();

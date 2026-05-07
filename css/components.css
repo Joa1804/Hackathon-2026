@@ -124,6 +124,10 @@ nav a.active {
   cursor: grab;
 }
 
+.kanban-card:active {
+  cursor: grabbing;
+}
+
 .kanban-card strong {
   font-size: 13px;
   display: block;
@@ -223,6 +227,13 @@ nav a.active {
   cursor: pointer;
 }
 
+/* Modal responsivo */
+@media (max-width: 520px) {
+  .modal-content {
+    margin: 40px 16px;
+  }
+}
+
 /* =====================
    MODAL BLUR
 ===================== */
@@ -239,4 +250,23 @@ footer {
   padding: 40px;
   text-align: center;
   font-size: 12px;
+}
+
+/* =====================
+   LOGOUT BUTTON
+===================== */
+.btn-logout {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.3);
+  color: rgba(255,255,255,.8);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background: rgba(255,255,255,.1);
+  color: white;
 }
